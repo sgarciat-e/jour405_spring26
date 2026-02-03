@@ -27,9 +27,16 @@ umd_fees <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/hea
 umd_fees_pct <- umd_fees |> mutate(pct_change = (`Fall 2024`- `Fall 2021`)/`Fall 2021` * 100)
 ```
 
+```{r}
+umd_fees_pct2524 <- umd_fees |> mutate(pct_change = (`Fall 2025`- `Fall 2024`)/`Fall 2021` * 100)
+```
+```
 
 
 ### Task 4: Describe our results
+
+Student fees have risen steadily, but the scale depends on timeframe: a 5.4% increase from Fall 2024 to Fall 2025, but a much larger 18.4% increase since Fall 2021. Athletics fees have remained flat, while Shuttle Bus, Recreation Services, and the Student Union show consistent growth that likely reflects expanding services or higher operating costs. The most dramatic increases appear in smaller categories: Student Sustainability fees grew 150% since 2021, and Student Counseling fees jumped from zero to a meaningful amount, signaling new services rather than inflation. The data shows that the university is directing fee growth toward transportation, wellness, and support services, with the sharpest changes happening gradually over the long term rather than in sudden year-to-year spikes.
+
 
 Write a few sentences about what you found in the data. What's the story here?
 
