@@ -1,86 +1,47 @@
 ---
-title: "HW2 Prince George's County Crime"
+title: "UMD Fees"
 ---
 
-In this assignment, we will be working with a dataset reporting the number of crimes by month in Prince George's County, Maryland, for every month in 2024. 
+Follow along with the demo to learn how to calculate percentage change using R and the Tidyverse. You should get started by loading the tidyverse in a new R block.
 
-### Task 1: Load the Tidyverse
 
-You will need to load the tidyverse library
+### Task 1: Load the tidyverse
+
 
 ```{r}
 library(tidyverse)
 ```
 
-Then you'll load the data from the web. The URL for the data is: https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/pg_crime_totals_2024.csv. You will create a dataframe called `pg_crime` that contains the data from this URL.
-
-### Task 2: Load the Data and Describe It
-
-```{r}
-pg_crime <- read.csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/pg_crime_totals_2024.csv")
-```
-### Task 3: Describe the Data
-
-You should examine that dataframe carefully by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the categories of incidents. From a reporting standpoint, are any of the categories more important than others? Why or why not? Do any of them make the job of summarizing the data more difficult? Why or why not?
 
 
 
-ANSWER HERE: The categories include both high-frequency incidents like accidents, theft, and auto theft, and lower-frequency violent crimes like homicide and assault shootings. Violent crimes carry more weight for public impact even though they happen less often, which makes the data harder to interpret—a handful of shootings and thousands of traffic accidents get treated as equivalent categories. The way incidents are split across multiple subcategories also makes it difficult to see patterns, since related crimes are separated rather than grouped together.
-
-### Task 4: Calculating Averages
-
-Calculate the total number of incidents per month for each category using `mutate()`, calling the new column `total_incidents`. Then calculate the average number of incidents per month for each category of crime, calling the new column `average_incidents`. Assign the result to a new dataframe called `pg_crime_averages`.
+### Task 2: Load the UMD Fees dataset from https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/umd_fees.csv
 
 ```{r}
-pg_crime_averages <- pg_crime %>%
-  mutate(
-    total_incidents = Jan + Feb + Mar + Apr + May + Jun +
-                      Jul + Aug + Sep + Oct + Nov + Dec,
-    average_incidents = total_incidents / 12
- )
+umd_fees <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/umd_fees.csv")
 ```
 
-### Task 5: Describe the Averages
-
-Examine the new dataframe, `pg_crime_averages`, by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the average number of incidents per month for each category. Which categories have the highest average number of incidents per month? Which have the lowest? What does this tell you about the pattern of crime in Prince George's County? Are there categories that you have questions about? Why or why not?
-
-ANSWER HERE
-The data shows that high-volume categories—accident, auto stolen, theft from auto, and theft—dominate monthly incident counts, with several averaging hundreds of incidents per month. Meanwhile, homicide, assault shooting, assault weapon, and some robbery subcategories sit in the single digits or low teens. This gap reveals that most reported incidents in Prince George's County are property crimes and traffic-related events rather than serious violent crime, even though violent crime generates far more public concern. Robbery residential stands out as a problem because it has missing values, which makes it harder to spot trends and suggests there might be data reporting or classification issues that aren't immediately visible in other categories.
-
-### Task 6: Testing a Theory
-
-One theory about crime is that it is more likely to occur in the summer months. Test this theory by creating three new columns using `mutate()` that calculate the percentage change compared to the average for each category of crime for the months of June, July, and August. Call the new columns `june_change`, `july_change`, and `august_change`. Assign the result to a new dataframe called `summer_crime_averages`.
+### Task 3: Calculate the percentage change in each category between Fall 2024 and Fall 2021 using `mutate()`
 
 ```{r}
-summer_crime_averages <- pg_crime_averages %>%
-  mutate(
-    june_change = (Jun - average_incidents) / average_incidents * 100,
-    july_change = (Jul - average_incidents) / average_incidents * 100,
-    august_change = (Aug - average_incidents) / average_incidents * 100
-  )
+umd_fees_pct <- umd_fees |> mutate(pct_change = (`Fall 2024`- `Fall 2021`)/`Fall 2021` * 100)
 ```
 
-### Task 7: Describe the Summer Crime Averages
+```{r}
+umd_fees_pct2524 <- umd_fees |> mutate(pct_change = (`Fall 2025`- `Fall 2024`)/`Fall 2021` * 100)
+```
+```
 
-Look at the `summer_crime_averages` dataframe by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the percentage change in the average number of incidents per month for each category of crime for the months of June, July, and August. Do you see any patterns? What does this tell you about the theory that crime is more likely to occur in the summer months?
 
-ANSWER HERE
-Looking at the percentage changes, some categories show modest increases in June and July—especially auto-related crimes, assaults, and certain violent incidents—while others stay flat or 
-even decline compared to their yearly averages. The pattern is mixed rather than showing a clear summer spike across the board. This suggests that while some types of crime do increase during summer months, the idea that all crime is more likely in summer is only partially true and depends on what type of incident you're looking at.
+### Task 4: Describe our results
 
-### Task 8: What's the Story?
+Student fees have risen steadily, but the scale depends on timeframe: a 5.4% increase from Fall 2024 to Fall 2025, but a much larger 18.4% increase since Fall 2021. Athletics fees have remained flat, while Shuttle Bus, Recreation Services, and the Student Union show consistent growth that likely reflects expanding services or higher operating costs. The most dramatic increases appear in smaller categories: Student Sustainability fees grew 150% since 2021, and Student Counseling fees jumped from zero to a meaningful amount, signaling new services rather than inflation. The data shows that the university is directing fee growth toward transportation, wellness, and support services, with the sharpest changes happening gradually over the long term rather than in sudden year-to-year spikes.
 
-Write up a lede and nutgraf of a story focused on the crime data in Prince George's County. It could be from any of the dataframes you've created in this assignment. The lede should be a single sentence that summarizes the most important information in the data. The nutgraf should be a paragraph that provides more context and explains why the data is important.
 
-ANSWER HERE
+Write a few sentences about what you found in the data. What's the story here?
 
-Lede: 
-Property crimes and traffic-related incidents comprise the vast majority of reported crime in Prince George’s County, far outpacing violent offenses throughout the year.
-Nutgraf: 
-A recent analysis of county crime data reveals that high-volume incidents like theft, auto theft and traffic crashes happen at significantly higher rates than homicides or shootings. While 
-specific crimes see minor summer increases, overall patterns remain driven by routine incidents rather than seasonal violence spikes. Officials said identifying these trends puts public 
-safety concerns into context and directs law enforcement resources to areas where they may have the greatest impact.
 
-### Task 9: Save Your Work and Put it on GitHub
 
-Save this notebook, then commit it to your local repository. Push the changes to your GitHub repository and submit the URL for this file in ELMS.
+
+
+When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
