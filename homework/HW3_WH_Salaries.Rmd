@@ -8,7 +8,7 @@ In this assignment, we will be working with a dataset containing information abo
 
 You will need to load the tidyverse library
 
-```{r}
+```{r} 
 library(tidyverse)
 ```
 
@@ -16,7 +16,6 @@ Then you'll load the data from the web. The URL for the data is: https://raw.git
 
 ### Task 2: Load the Data and Describe It
 
-```{r}
 ```{r} 
 wh_salaries <- read.csv ("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/white_house_salaries_2025.csv")
 View(wh_salaries)
@@ -25,8 +24,6 @@ View(wh_salaries)
 
 You should examine that dataframe carefully by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the categories of incidents. From a reporting standpoint, what stands out to you about this data? Are there any salary values that will cause problems for analysis?
 
-ANSWER HERE
-ANSWER HERE:
 
 The dataset includes White House staff members with their 2025 salaries and job titles. What's interesting is the huge salary range—some high-level advisers make six figures while several entries show $0, probably because they're paid by other agencies instead of directly by the White House. This creates a problem for calculating averages since including those zeros would make the mean salary look artificially low.
 
@@ -34,8 +31,7 @@ The dataset includes White House staff members with their 2025 salaries and job 
 
 Write code to calculate the mean and median of the salaries in the dataset using the `summarize()` function. You don't need to make a new dataframe, just display the results.
 
-```{r}
-
+```{r} 
 summarize(
   wh_salaries,
   mean_salary = mean(SALARY),
@@ -47,8 +43,7 @@ summarize(
 
 Take the code you just wrote and add in the minimum and maximum salaries (the functions for that are `min()` and `max()`). Your results should show four columns: mean_salary, median_salary, min_salary, max_salary.
 
-```{r}
-
+```{r} 
 summarize(
   wh_salaries,
   mean_salary = mean(SALARY),
@@ -62,15 +57,12 @@ summarize(
 
 Write a couple of sentences describing the results of your analysis. What do the mean and median salaries tell you about the data? What do the minimum and maximum salaries tell you? Are there any outliers in the data?
 
-ANSWER HERE
-
 The mean salary is higher than the median, which means the distribution is skewed upward by higher-paid positions—the median of 101,500 gives a better sense of what a typical staff member actually makes. The minimum salary of $0 shows that some staff aren't paid directly by the White House, while the maximum of 225,700 represents the top-earning roles. These extreme values on both ends pull the mean in different directions and make it less reliable as a measure of what most people are actually earning.
 
 ### Task 7: Story Idea
 
 Based on the data, what is your best story idea? What is the next step you would take to develop that story idea?
 
-ANSWER HERE:
 
 The story here is how White House pay reflects hierarchy and influence, some job titles earn over 200,000 while others are listed at $0 despite working in the same administration. The gap between senior advisory roles and lower-level or detailee positions reveals how the administration assigns value and power, which raises questions about who gets compensated and why.
 The next step would be breaking down salaries by job title to see which roles consistently earn the most and which positions are unpaid. I'd also look at how common $0 salaries are across different titles and compare these patterns to previous years to see if compensation structures have shifted over time.
