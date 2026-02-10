@@ -22,6 +22,9 @@ crimes <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads
 
 
 ### Task 3: Use janitor to clean up the column names
+```{r}
+clean_names(crimes)
+```
 
 
 
@@ -37,6 +40,7 @@ crimes |> mutate(total_rate = grand_total/population * 10000)
 
 ```{r}
 crimes_with_rates <- crimes |> mutate(violent_rate = violent_crime_total/population * 10000, property_rate = property_crime_total/population * 10000)
+View(crimes_with_rates)
 ```
 
 
@@ -45,8 +49,7 @@ crimes_with_rates <- crimes |> mutate(violent_rate = violent_crime_total/populat
 
 Write a few sentences about what you found in the data. What years had the highest crime rates? What years had the lowest crime rates? Does the pattern match your expectations?
 
-
-
+What I found was that the highest rates were the years 1995 (total rate of: 629.3713), 1992 (total rate of: 622.3594), and 1991(total rate of: 620.9074). From the patterns it looks like in the early 2000s overall crime rates begings to dwindle down with the lowest rates being in 2020, 2019 and 2018. At least in 2020, the rate makes a lot of sense since because of lock downs and COVID19, opportunities for crime probably presented themselves less.
 
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
 
