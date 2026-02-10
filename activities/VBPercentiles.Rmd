@@ -34,12 +34,7 @@ team_aces |> mutate(percentile = ntile(total_aces, 100))
 
 
 ### Task 5: Describe the percentiles
-
-Write a couple of sentences that puts Maryland into context with the other teams in the dataset. You can do some Internet research to help with this.
-
-
-
-When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
+In the 2024 NCAA women's volleyball stats, Maryland actually stands out in service aces compared to other teams. While they rank in the lower percentiles for overall wins and offensive efficiency, their ace totals put them closer to the middle or upper range of the dataset, which suggests a relatively strong serving game. 
 
 
 
