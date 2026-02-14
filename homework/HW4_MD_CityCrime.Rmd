@@ -76,3 +76,40 @@ Nutgraf: An analysis of violent and property crime rates per 10,000 residents sh
 ### Task 9: Save Your Work and Put it on GitHub
 
 Save this notebook, then commit it to your local repository. Push the changes to your GitHub repository and submit the URL for this file in ELMS.
+
+
+
+### Task 10 - 02.14.26 : Task 10. Your task will be to take the violent crime rates for 2020 and do three things:
+
+Using the 2020 violent crime rate, calculate the percentiles using `ntile()`. Save the results to a new dataframe called `md_cities_percentiles`. How many cities are above the 90th percentile?
+
+
+```{r}
+md_cities_percentiles <- md_cities_rates %>%
+  mutate(
+    percentile_2020 = ntile(violent_rate_2020,100)
+  )
+View(md_cities_percentiles)
+```
+
+There are 11 cities either in the 90th percentile or above it.
+
+Calculate the Interquartile Range of the 2020 violent crime rate using `summarize()` and R's `IQR()` function. The syntax is similar to how `mean()` works.
+
+
+```{r}
+md_cities %>%
+  summarize(IQR(violent2020))
+## I wasn't sure what row to summarize, I'm going to go with the first one.
+md_cities_percentiles %>%
+  summarize(IQR(percentile_2020))
+
+```
+
+
+
+Do the results change your best story idea from the previous assignment? Why or why not?
+
+If I were to follow the IQR results of the violent2020 row, I would say that it backs up my story idea by showing that the middle half of MD cities have somewhat similar violent crime rates. This supports my story by signaling out what cities stand out as outliers, if the middle 50% are relatively similar then the shaper upticks in violent crime stand out more, especially in places where even a few incidents can change rates dramatically.
+
+
