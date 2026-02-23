@@ -7,11 +7,14 @@ In this assignment, you will be working with a dataset of songs played on Spotif
 ### Task 1: Load the tidyverse
 
 ```{r}
+library(tidyverse)
 ```
 
 ### Task 2: Load the Spotify Songs dataset from https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/spotify_2020.csv
 
 ```{r}
+spotify_songs <- read.csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/spotify_2020.csv")
+View(spotify_songs)
 ```
 
 ### Task 3: Calculate the mean and standard deviation of the danceability scores
@@ -19,6 +22,11 @@ In this assignment, you will be working with a dataset of songs played on Spotif
 Write code to calculate the mean standard deviation of the danceability scores in the Spotify dataset. Display those.
 
 ```{r}
+spotify_songs %>%
+summarise(
+  mean_danceability = mean(danceability, na.rm = TRUE),
+  sd_danceability = sd(danceability, na.rm = TRUE)
+)
 ```
 
 ### Task 4: Create a histogram of the danceability scores
@@ -26,11 +34,21 @@ Write code to calculate the mean standard deviation of the danceability scores i
 Write code to create a histogram of the danceability scores in the Spotify dataset, based on the example we did in class.
 
 ```{r}
+spotify_songs |>
+  ggplot() +
+  geom_histogram(aes(x = danceability), binwidth = 0.05) +
+  geom_vline(aes(xintercept = mean(danceability, na.rm = TRUE)),
+             color = "red", linetype = "dashed", size =1)+
+  geom_vline(aes(xintercept = mean(danceability, na.rm = TRUE) - sd(danceability, na.rm = TRUE)),
+             color = "blue", linetype = "dashed", size = 1) +
+  geom_vline(aes(xintercept = mean(danceability, na.rm = TRUE) + sd(danceability, na.rm = TRUE)),
+             color = "blue", linetype = "dashed", size = 1)
+
 ```
 
 ### Task 5: Add a line to the histogram for the mean danceability score
 
-Write code to add a vertical line to the histogram for the mean danceability score, based on the example in class.
+Write code to add a vertical line to the histogram for the mean danceability score, based on the example in class.  - *I did this in the earlier code
 
 ```{r}
 ```
@@ -38,6 +56,8 @@ Write code to add a vertical line to the histogram for the mean danceability sco
 ### Task 6: Describe our results
 
 Write a few sentences about the distribution of danceability scores in the Spotify dataset. Is it a normal distribution, or is it skewed in one direction? What does the mean and distribution tell us about the songs in the dataset?
+
+The histogram showing the danceability scores forms a rough bell-shaped distribution that is slightly skewed to the left. The mean danceability is 0.673, while the IQR range shows that most songs are between 0.51 and 0.83. The highest concentration of songs was mostly between 0.60 and 0.80, showing that most songs in the data set were moderately to highly danceable. The left-skew to the histogram helps suggest that while some lower-danceability songs exist, they were much less common. This histogram shows that of the popular songs in 2020, most had pretty danceable rythms with the average track scoring above the mid point of the overall scale.
 
 ### Task 7: Save Your Work and Put it on GitHub
 
