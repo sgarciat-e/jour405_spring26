@@ -35,6 +35,8 @@ calls_data <- read_csv("https://raw.githubusercontent.com/dwillis/datajournalism
 
 # Display the first few rows to understand the structure
 head(calls_data)
+
+View(calls_data)
 ```
 
 ## Task 2: Initial Data Exploration
@@ -74,7 +76,7 @@ summary(daily_calls$call_count)
 
 Let's visualize the time series of daily calls. What patterns do you see? If you had to draw horizontal lines that would highlight unusual days, where would those lines be?
 
-ANSWER HERE
+In the graph there's a stable average of 10 calls a day, with some of the highest spikes appearing in the spring to summertime tampering down in the fall and winter. However, there is also an unusual peak around October that stands out, it kind of indicates a pattern of occasional short term surges that a consistent increase over time. I would draw horizontal lines for the minimum, max, median and mean.
 
 ```{r daily-calls-plot}
 # Plot daily call volume
@@ -137,7 +139,7 @@ unusual_days |>
 
 Let's visualize these unusual days in the context of the full dataset. How do they differ from your answer on Task 3?
 
-ANSWER HERE
+When unusual days are put into the context of z-scores instead of visual estimates, it is easier to see a pattern that extreme values occur throughout the year rather than spiking during certain seasons. All 11 unusually high days and 7 unusually low days are highlighted in this visual making it easier to spot out a pattern, this differs a lot from the other graph in terms of readability.
 
 ```{r plot-unusual-days}
 # Create a clean factor for the plot legend
@@ -208,6 +210,8 @@ ggplot(dow_summary, aes(x = day_of_week, y = avg_calls)) +
 We can also calculate z-scores that account for the day of the week pattern. How would you describe the day with the highest z-score without using the term "z-score"?
 
 ANSWER HERE
+
+The most extreme day was October 4, 2022 (Tuesday). On that day there were 23 overdose-related 911 calls, far higher than a typical Tuesday with an average of 10 calls in Baltimore County. 
 
 ```{r day-of-week-z-scores}
 # Calculate day-of-week adjusted z-scores
@@ -298,5 +302,5 @@ top_outliers |> kable(digits = 2)
 
 Based on our z-score analysis, what are some potential angles for reporting? What would your next steps be and what would you tell an editor about your findings?
 
-ANSWER HERE
+The data shows a steady number of overdose calls over the year, but several days saw spikes in call volume that in some cases doubled normal levels. The angle I would want to take is finding out what caused those spikes, What is different about these days and how do emergency services respond to high call days like this? What is happening in the area that makes this kind of spike so consistent throughout the year? Do holidays usually correspond with unussually high overdose calls? My next step would be to contact the county's health department and local hospitals.
 
