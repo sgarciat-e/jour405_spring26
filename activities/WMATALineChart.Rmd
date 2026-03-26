@@ -58,3 +58,5 @@ weekly_wmata |>
 **Answer this question:** Describe the trend you see. Is ridership going up, down, or staying flat? What are the big dips, and what might explain them? What would you want to know before writing a story about Metro weekly ridership trends?
 
 ANSWER HERE
+
+According to the line chart, weekly metro ridership remains stable but has begun to trend downward. The biggest dips occur around early January, which could point to holidays, weather or service disruptions. Before writing a story on this data i would want to know the regions seasonal patterns, if any service changes have been announced and what last years data looks like in comparison.
