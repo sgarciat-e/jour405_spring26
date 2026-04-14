@@ -1,0 +1,69 @@
+---
+title: "Final Project: College Spending and Graduation Rates"
+by: "Sol Garcia-Terrazas" 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Introduction of Final Project
+
+Main Hypothesis: Colleges that spend more per student (measured by spending per award) have higher graduation rates than those that spend less.
+
+Additional hypothesis: The relationship between spending and graduation rates differs between public and private institutions.
+
+For my final project I am using data from: https://www.kaggle.com/datasets/thedevastator/boost-student-success-with-college-completion-da/data
+
+It's based on U.S Department of Education data covering variables like graduation rates, spending per student, tuition, enrollment, demographics, and admission data and other institutional features from the mid 2010s to the early 2020s.
+
+I am focusing on the variables: 
+- exp_award_value <- proxy for institutional spending 
+- grad_150_rate <- main outcome variable
+- control <- public vs. private institutions
+- level <- 2 year vs. 4 year institutions (does degree type affect the outcome)
+- student_count: measures total enrollment (does institution size matter?)
+- race and gender <- could potentially reveal disparities in graduation rates across different student groups.
+
+
+potential ideas: 
+- scatterplot (spending vs graduation rate)
+- Compare means (public vs private)
+
+```{r}
+library(tidyverse)
+
+inst_grads <- read_csv("data/cc_institution_grads.csv")
+inst_details <- read_csv("data/cc_institution_details.csv")
+state_grads <- read_csv("data/cc_state_sector_grads.csv")
+state_details <- read_csv("data/cc_state_sector_details.csv")
+
+
+glimpse(inst_grads)
+glimpse(inst_details)
+```
+
+
+
+#Joining the Data sets were focusing on inst_details and state_details
+
+```{r}
+inst_full <- inst_grads |>
+  left_join(inst_details, by = "unitid")
+
+glimpse(inst_full)
+summary(inst_full)
+
+clean_data <- inst_full |>
+  filter(!is.na(exp_award_value), !is.na(grad_150_rate))
+```
+
+
+# What am I missing? What are my limitations.
+
+The data set does not include a direct measure of spending per student which was part of my original idea. Now I am using exp_award_value (spending per award) as a proxy, which may not perfectly capture overall institutional spending.
+
+Also the data set lacks variables related to student income, financial aid or tuition, which could limit essential context.
+
+How should I handle missing data?
+
