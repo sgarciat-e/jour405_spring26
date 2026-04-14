@@ -49,5 +49,6 @@ matches |>
 
 ### Task 6: Describe the results of both the correlation calculation and the scatterplot.
 
+The correlation between goal differential and fouls 0.018, which is basically zero. This shows there is almost not linear relationship between the variables. Knowing a teams goal differential doesn't really tell you anything about how many fouls they commit. The scatter plot shows the same thing, the points are widely scattered with no clear upward or downward trend. Fouls stay relatively consistent regardless of the goal differential.
 
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
