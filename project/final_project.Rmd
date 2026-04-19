@@ -7,27 +7,42 @@ by: "Sol Garcia-Terrazas"
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
+## Ideas of Tests to Run
+Data Prep
+- Filtering out missing data for accurate conclusions
+- Filter by institution type (2-year vs. 4-year), so sperate analysses can be done avoiding invalid comparisons.
+Tests
+- Correlation analysis to measure the strength of the relationship between spending per award and graduation rates
+- Linear regression, to test is whether the relationship is statistically significant, im not very confident in this part.
+- Comparing means of graduation rates (public vs. private institutions) : summary statistics and t-testing
+- Potentially focusing on group means (for example racial groups) to investigate potential disparities.
+Visualizations
+- Scatter plot (spending award vs graduation rate): to identify patterns and outliers.
+- Scatter plot with regression line?
+- Boxplot: for graduation rates by institution type, public vs. private
+
+
 ## Introduction of Final Project
 
-Main Hypothesis: Colleges that spend more per student (measured by spending per award) have higher graduation rates than those that spend less.
+Updated Main Hypothesis: Colleges with higher spending per award tend to have higher graduation rates than those that spend less. However it might reflect differences in institutional resources rather than student investment. 
 
-Additional hypothesis: The relationship between spending and graduation rates differs between public and private institutions.
+Additional Hypothesis: The relationship between spending per award and graduations rates differ between public and private institutions
 
 For my final project I am using data from: https://www.kaggle.com/datasets/thedevastator/boost-student-success-with-college-completion-da/data
 
 It's based on U.S Department of Education data covering variables like graduation rates, spending per student, tuition, enrollment, demographics, and admission data and other institutional features from the mid 2010s to the early 2020s.
 
 I am focusing on the variables: 
-- exp_award_value <- proxy for institutional spending 
+- exp_award_value <- Spending per award
 - grad_150_rate <- main outcome variable
 - control <- public vs. private institutions
-- level <- 2 year vs. 4 year institutions (does degree type affect the outcome)
+- level <- 2 year vs. 4 year institutions (does degree type affect the outcome, analyses conducted within levels)
 - student_count: measures total enrollment (does institution size matter?)
 - race and gender <- could potentially reveal disparities in graduation rates across different student groups.
 
 
 potential ideas: 
-- scatterplot (spending vs graduation rate)
+- scatterplot (spending per award vs graduation rate)
 - Compare means (public vs private)
 
 ```{r}
