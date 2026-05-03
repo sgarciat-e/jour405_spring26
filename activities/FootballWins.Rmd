@@ -1,4 +1,3 @@
-
 ---
 title: "Multiple Regression Analysis in R"
 ---
@@ -56,6 +55,8 @@ Is this a useful model, based on what you've seen? Why?
 
 ANSWER HERE
 
+I think this is a fairly useful model. It explains a lot of the variation in wins (0.58), and the model is statistically significant, so clearly those factors do help explain team success. However only points scored is clearly significant, while the other variables like takeaways are borderline significant and yards gained are not significant. This means there's still a large chunk of the story missing but it's a pretty solid foundation for identifying patterns. 
+
 ## Correlation Analysis
 
 After building the model, we calculate the correlation matrix for our variables of interest. This matrix helps visualize the strength and direction of the relationships between each pair of variables.
@@ -82,6 +83,12 @@ Which of these three factors - Yards Gained, Takeaways and Points Scored - have 
 
 ANSWER HERE
 
+
+Points scored clearly has the strongest impact on wins, with the highest correlation (0.71) and it's the only variable that's statistically significant. Takeaways also have somewhat of a meaningful impact, with a correlation of 0.57 (borderline significant). Yards gained on the other hand is way less impactful out of all three variables. It has a weak correlation of of 0.44 and its not statistically significant in the model.
+
 ## Using the Model (3 points)
 
 Without using the words "multiple regression model", describe how you could use this model to cover a team or game.
+
+
+This model could help explain why some teams win more games than others by showing what stats matter most, like scoring and takeaways. If I'm covering a game, I could use it to highlight how a team's performance (like putting up more points or forcing turnovers) contributed to a win or a loss. It also helps give context when something unexpected happens, for example: a team gaining a lot of yards but still losing the game.
