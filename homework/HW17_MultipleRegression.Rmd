@@ -1,6 +1,6 @@
 ---
 title: "Multiple Regression Analysis: Maryland Voter Turnout"
-name: "YOUR NAME HERE"
+name: "Sol Garcia-Terrazas"
 ---
 
 # Introduction
@@ -10,6 +10,7 @@ Multiple regression analysis is a statistical method used to understand the rela
 ```{r setup}
 library(tidyverse)
 #install.packages('corrplot')
+install.packages("corrplot")
 library(corrplot)
 ```
 
@@ -27,6 +28,11 @@ head(md_turnout)
 Before building our model, let's explore the data to understand the variables and their relationships. Examine the correlation matrix to see how the independent variables relate to each other and to the dependent variable (voter turnout). Which variables seem to be correlated? Are there any that are not correlated at all? Also look at the multiple scatterplots. Which variables seem to have a linear relationship with the dependent variable? Which do not?
 
 ANSWER HERE
+
+Looking at the correlation matrix, a few variables clearly stand out. Voter turnout has a strong negative relationship with percent unemployed (-0.74) and a strong positive relationship with the white pct (0.69). It's also moderatly related to median age (0.50) and income (0.45). Some of the independent variables like income and percent with a bachelor's degree (0.75) were also pretty correlated. Some variables are not related at all: like percent with a bachelor's degree and median age.
+
+In the scatter plots, the pct unemployed and pct white have the clearest linear relationships with turnout. Income and median age also show an upward shift, but its not that strong. Population and pct with a bachelor's degree show up a lot more scattered, showing a weaker relationship with turnout. 
+
 
 
 ```{r}
@@ -91,6 +97,9 @@ Examine the output of the model, checking the coefficients, residuals, and overa
 
 ANSWER HERE
 
+I think this model does a pretty good job of predicting voter turnout. The residuals are small and centered around zero, and the r-squared (0.85-0.80) shows the model explains most of the variation in turnout. The coefficients, income, median age, and pct white are significant and positively related to turnout. On the other hand variables like: population, pct with a bachelor's degree and pct unemployed, are not significant. While the model is useful, it could be probably simplified by removing less important variables.
+
+
 ```{r}
 # Build initial model with all predictors
 initial_model <- lm(turnout ~ population + income + pct_bachelors_higher + 
@@ -105,17 +114,22 @@ Create three alternative models by adding or removing variables to see if we can
 
 ANSWER HERE
 
+Model 2 focuses on the strongest predictors by keeping income, median age and pct white while removing weaker variables. Model 3 tests whether unemployment can explain turnout by including it instead of median age, and Model 4 replaces income with education to see if pct with a bachelor's degree preforms differently. 
+
+After testing these models, none are dramatically better than the first. Model 2 has the highest r-squared value (0.8024), but it's the same as the original model. Model 3 performs slightly worse (0.766), and Model 4 drops off the most (0.657). Removing weaker variables didn't do as much as I expected it would, Model 2 is the best choice because of its simplicity but it works just as well as the original.
+
+
 ```{r}
-# Model 2
-model2 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+# Model 2 (remove insignificant variables)
+model2 <- lm(turnout ~ income + median_age + pct_white,  data = md_turnout)
 summary(model2)
 
-# Model 3
-model3 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+# Model 3 (keeping unemployment)
+model3 <- lm(turnout ~ income + pct_unemployed + pct_white, data = md_turnout)
 summary(model3)
 
-# Model 4
-model4 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+# Model 4 (education instead of income)
+model4 <- lm(turnout ~ pct_bachelors_higher + median_age + pct_white, data = md_turnout)
 summary(model4)
 
 # Compare models
@@ -145,3 +159,5 @@ ggplot(model_comparison, aes(x = reorder(Model, Adjusted_R_squared), y = Adjuste
 Without using the words "multiple regression model", describe how you could use this analysis to cover an election or voter participation story.
 
 ANSWER HERE
+
+This analysis could help to explain why turnout higher in some counties than other by showing which factors matter the most like: income, age and demographics. For an election story, I could use it to compare counties with high and low turnout and investigate the patterns in those differences. This analysis help guide reporting by showing where to look for a story. 
