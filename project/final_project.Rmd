@@ -95,6 +95,7 @@ clean_data <- inst_full |>
     !is.na(level),
     !is.na(student_count)
   )
+clean_data <- clean_data |> mutate(spend_k = exp_award_value / 1000)
 # reference groups
 clean_data$level <- relevel(as.factor(clean_data$level), ref = "4-year")
 ```
@@ -118,50 +119,51 @@ count (clean_data,level)
 Correlation: 0.1244046, positive but very weak relationship 
 
 ```{r}
-cor(clean_data$exp_award_value, clean_data$grad_150_rate, use = "complete.obs")
+cor(clean_data$spend_k, clean_data$grad_150_rate, use = "complete.obs")
 ```
 
 # Simple Linear Regression
-Residuals: (I don't know that my data fits very well with this model)
+Residuals: (this model has low explanatory power)
      Min       1Q   Median       3Q      Max 
 -307.147  -24.756   -3.061   20.721   63.992 
 
 Model Equation:
-Graduation rate = 36.01 + 0.000051 x spending award
+Graduation rate = 36.01 + 0.05133 x spending award <- (spend_k)
 
 Coefficient:
-exp_award_value = 0.000051 (for every $1 increase in spending per award -> graduation rates increase by 0.000051)
+spend_k = 0.05133 (for every $1,000 increase in spending per award -> graduation rates increase by 0.05133)
 
 p-value = < 0.00000000000000022 <- statistically significant but not practically meaningful.
-R-squared = 0.01548 <- spending only explains 1.5% of the variation in graduation rates
+
+R-squared = 0.01548 <- thats pretty low and shows that spending only explains 1.5% of the variation in graduation rates
 
 Conclusion from this test: spending more is associated with slightly higher graduation rates, the effect however is VERY SMALL.
 ```{r}
-simple_model <- lm(grad_150_rate ~ exp_award_value, data = clean_data)
+simple_model <- lm(grad_150_rate ~ spend_k, data = clean_data)
 summary(simple_model)
 ```
 # Multiple Regression
-Intercept (Baseline: 4-year private institution) = 47.15 <- 4-year schools have a predicted graduation rate of about 47%
+Intercept (Baseline: private for profit, 4-year private institution) = 47.15 <- 4-year schools have a predicted graduation rate of about 47%
 
-exp_award_value = 0.000023 <- positive but smaller than before (0.000051), once we control for school type and size, spending matters even less.
+spend_k = 0.02341 <- positive but smaller than before (0.05133), once we control for school type and size, spending matters even less.
 
 Institution type
-controlPublic = -18.29 <- 18 percentage points lower graduation rates than private for-profit institutions
+controlPublic = -18.29 <- public institutions 18 percentage points lower graduation rates than private for-profit institutions
 controlPrivate not-for-profit = +0.76 <- slightly above the estimate but small effect.
 
 Level:
 level2-year = -5.03 <- 2-year schools have a 5% lower graduation rates than 4-year institutions
 
 Size:
-student_count = 0.000165 <-larger school have SLIGHTLY higher grad rates; the effect is SMALL
+student_count = 0.0001654 <-larger school have SLIGHTLY higher grad rates; the effect is SMALL
 
 R-squared = 0.1236 <- this model explains about 12.4% of variation in graduation rates (compared to the simple model of 1.5%, institutional characteristics matter way more than spending alone)
 
-Reflection: Most variation is explained by other factors not in this model (What is the biggest factor? Is that relevant to my project?)
+Reflection: Most variation is explained by other factors not in this model
 
 ```{r}
 multiple_model <- lm(
-  grad_150_rate ~ exp_award_value + control + level + student_count,
+  grad_150_rate ~ spend_k + control + level + student_count,
   data = clean_data
 )
 summary(multiple_model)
@@ -200,6 +202,8 @@ p-value < 0.00000000000000022 <- statistically significant observed gap
 
 95% confidence interval: 13.03 - 13.32 <- 95% sure that 4-year institutions have grad rates 13.0 to 13.3% higher than 2-year schools. (smaller difference than the regression model which said it was 5% higher) <- does that matter?
 
+The larger difference found in the t-test compared to the regression model matters because the t-test compares 2-year and 4-year institutions without controlling for other factors. The regression model adjusts for variables like spend_k, enrollment size and institutional control, suggesting that part of the graduation-rate gap is explained by broader institutional differences
+
 ```{r}
 t.test(grad_150_rate ~ level, data = clean_data)
 ```
@@ -237,9 +241,9 @@ Schools with extremely high graduation rates (above 90%), including:
 * Predominantly elite private not-for-profit institutions, usually with highly selective admissions processes
 
 Many of these top-preforming schools also have very high spending awards:
-- Yale University ($556,675)
-- Princeton University ($383,472)
-- Harvard University ($381,077)
+- Yale University ($556,675) spend_k <- 556.675	
+- Princeton University ($383,472) spend_k <-383.472
+- Harvard University ($381,077) spend_k <- 381.077
 * Suggests that higher spending per award is associated with strong outcomes in some cases, especially among well-resourced institutions. 
 
 Important Outlier:
@@ -256,7 +260,7 @@ school_level_data <- clean_data|>
   group_by(unitid, chronname, control,level)|>
   summarise(
     avg_grad_150_rate = mean(grad_150_rate, na.rm = TRUE),
-    avg_exp_award_value =  mean(exp_award_value, na.rm = TRUE),
+    spend_k = mean(spend_k, na.rm = TRUE),
     student_count = mean(student_count, na.rm = TRUE),
     .groups = "drop"
   )
@@ -268,12 +272,13 @@ school_level_data <- school_level_data|>
 
 school_level_data |> 
   arrange(desc(grad_zscore)) |>
-  select (unitid,chronname,avg_grad_150_rate, avg_exp_award_value, control, level, grad_zscore)|>
+  select (unitid,chronname,avg_grad_150_rate, spend_k, control, level, grad_zscore)|>
   head(10)
 
 school_level_data |>
   arrange(grad_zscore)|>
-  select(unitid,chronname,avg_grad_150_rate, avg_exp_award_value, control, level, grad_zscore)|>
+  select(unitid,chronname,avg_grad_150_rate, spend_k
+         , control, level, grad_zscore)|>
   head(10)
 
 count(school_level_data, level)
@@ -305,7 +310,7 @@ summary(public_model)
 ```
 
 
-Private Institution Model: (Includes for-profit and not-for-profit)
+#Private Institution Model: (Includes for-profit and not-for-profit)
 Baseline: 44.11 <- a private for profit 4-year institution has an estimated graduation rates of 44%
 
 exp_award_value = 0.000031823 <- positive but small effect, larger than the public model
@@ -326,7 +331,7 @@ summary(private_model)
 ```
 
 
-4-year Institutions Model:
+#4-year Institutions Model:
 
 Baseline = 33.54% <- a 33.5% estimated grad rate for a private for-profit 4-year institution
 
@@ -345,19 +350,128 @@ r-squared = 0.06381 <- this model explains 6% of variation in graduation rates
 ```{r}
 four_year_model <- clean_data|>
   filter(level == "4-year")|>
-  lm(grad_150_rate ~ exp_award_value + control + student_count, data = _)
+  lm(grad_150_rate ~ spend_k + control + student_count, data = _)
 summary(four_year_model)
 
 ```
 
 
-2-year Institutions Model:
+#2-year Institutions Model:
+
+Baseline = 59.15% <- represents the predicted graduation rate for a private for-profit 2-year institution 
+
+spend_k = -0.04407 <- for every additional $1,000 spent per award, graduation rates decrease by 0.04 percentage points (after controlling for institutional type and enrollment size) This is a sharp contrast from the other models.
+
+controlPrivate not-for-profit = -7.865 <- private not-for-profit 2 year institutions have graduation rates  7.9 percentage points lower than private for-profit institutions. This suggests institutional type may influence graduation outcomes independently of spending levels. 
+
+controlPublic = -33.91 <- public 2-year graduation rates about 34 percentage points lower than  private for-profit institutions. This is one of the strongest effects in the model and could reflect the larger, more economically diverse student populations often served by public community colleges.
+
+student_count = -0.0003201 <- larger 2-year are associated with slightly lower graduation rates; THE PRACTICAL EFFECT IS VERY SMALL (enrollment size alone has little impact on graduation outcomes).
+
+p-value < 0.001 <- all variables are statistically significant
+
+r-squared = 0.3298 <- this model explaiuns about 33% of the variation in graduation rates among 2-year institutions (MUCH LARGER than the other models)
+
+CONCLUSION: Unlike the overall and 4-year models, the 2-year model shows a small negative relationship between spending per award (spend_k) and graduation rates. This suggests that higher spending alone may not improve outcomes at 2-year institutions, where broader structural and socioeconomic factors may play a larger role in student success. 
+
 
 ```{r}
 two_year_model <- clean_data|>
   filter(level == "2-year")|>
-  lm(grad_150_rate ~ exp_award_value + control + student_count, data = _)
+  lm(grad_150_rate ~ spend_k + control + student_count, data = _)
 summary(two_year_model)
 
 ```
 
+
+
+#Sampled scatterplot: spending vs. graduation rate
+
+I first tried to create a regular scatterplot with a regression line. However because the dataset contains hundreds of thousands of observations, the visualization became heavily overplotted and very difficult to interpret. So I decided to pivot and make a sampled scatterplot for easier readability
+
+
+
+OLD SCATTERPLOT -  Meant to show the error first made
+
+At first the data was only showing/compressed in a very small corner, I had to find out how to fix this so I looked up the standard rstudio ggplot guide on ggplot2.tidyverse.org where I found the Cartesian coordinates function which zooms in the plot. When I was able to fix that error, I ran into another one. The data set was way too big. To make the visualization more understandable, I created a sampled scatterplot using a subset of the data.
+
+
+source used for troubleshooting: 
+https://ggplot2.tidyverse.org/reference/coord_cartesian.html
+```{r}
+ggplot(clean_data, aes(x = spend_k, y = grad_150_rate)) +
+  geom_point(alpha = 0.05, size = 1) +
+  geom_smooth(method = "lm", color = "blue", se = FALSE) +
+  coord_cartesian(xlim = c(0, 500), ylim = c(0, 100)) +
+  labs(
+    title = "Spending per Award and Graduation Rates",
+    x = "Spending per Award (in $1,000s)",
+    y = "Graduation Rate"
+  ) 
+```
+
+
+Sampling the Data: REVISED VISUALIZATION
+```{r}
+set.seed(123)
+
+sample_data <- clean_data |>
+  sample_n(5000)
+
+sample_data |>
+  ggplot(aes(x = spend_k, y = grad_150_rate)) +
+  geom_point(alpha = 0.4, size = 1.2) +
+  geom_smooth(method = "lm", color = "blue", se = FALSE) +
+  coord_cartesian(xlim = c(0, 500) , ylim = c(0, 100)) +
+  labs(
+    title = "Relationship Between Spending per Award and Graduation Rates",
+    x = "Spending per Award (in $1,000s)",
+    y = "Graduation Rate"
+  ) 
+```
+Findings: The scatter plot shows a slight positive relationship relationship between spending per award and graduation rates. As spending per award increases, graduation rates tend to increase sightly. Because the data is widely scattered, it suggest that while there might be a positive relationship between spending per award and graduation rates, spending alone is not a strong predictor of graduation outcomes
+
+upward regression line: positive relationship
+
+points are very spread out: weak relationship/low correlation
+
+
+
+#Boxplot: graduation rates by institution control/type
+```{r}
+ggplot(clean_data, aes(x = control, y= grad_150_rate)) +
+  geom_boxplot() +
+  labs (
+    title = "Graduation Rates by Institution Type",
+    x = "Institution Type/Control",
+    y = "Graduation Rate", 
+  )
+
+```
+Findings: The box plot shows differences in graduation rates across institution types. private not-for-profit institutions have the highest median graduation rate, followed pretty closely by private for-profit institutions. Public institutions have the lowest median graduation rate, though several high-value outliers that indicate that there are several public institutions that are preforming exceptionally well.
+
+# Final Section - Story Pitch
+
+Story Pitch:
+This story examines whether colleges that spend more per award tend to have higher graduation rates. This analysis foud a statistically significant but weak positive relationship between spending and graduation rates. This suggests that spending alone is not a strong predictor of graduation rates.
+
+Further analysis shows that institutional characteristics tend to matter more. Public institutions and 2-year schools generally had lower graduation rates than private and 4-year institutions, its important to note that these differences became smaller after controlling for institutional factors like enrollment size and school type, suggesting that broader structural differences between schools may explain much of the variation.
+
+Major outliers were also identified. Elite private universities like Harvard, Princeton and Yale combined extremely high graduation rates with very high spending per award. On the other end of the spectrum several institutions like Ohio Mid-Western College reported very low graduation rates despite relatively high spending levels, further reinforcing that spending does not guarantee strong student outcomes.
+
+
+Potential Problems and Limitations:
+Several limitations affect the analysis of this data. The dataset does not include direct measures of student income, financial aid access, academic preparation or the selectivity of an institution -- all of which likely influence graduation outcomes.
+
+Spending per award is also only a proxy for institutional investment and may not fully capture how resources are being distributed to students.
+
+The results focus on identifying statistical relationships. Because the analysis is observational, it doesn't determine whether spending causes higher graduation rates. 
+
+
+Reporting Plan:
+My story would focus on the gap between institutional spending and student outcomes. My reporting would compare high-preforming and low-preforming schools, examine differences between public and private institutions and explore why higher spending does not always translate into better student outcomes. 
+
+My reporting would include: 
+- The visuals I created in rstudio (Box plot and Scatter plot)
+- Interviews with education researchers or administrators about why spending alone may not predict student success, and if not what does affect those outcomes?
+- A comparison of structural inequalities and differences in student populations across institutions.
